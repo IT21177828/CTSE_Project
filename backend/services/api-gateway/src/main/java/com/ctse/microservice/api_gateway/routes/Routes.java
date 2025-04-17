@@ -90,4 +90,11 @@ public class Routes {
                 .GET("/fallbackRoute", request -> ServerResponse.status(HttpStatus.SERVICE_UNAVAILABLE).body("Service Unavailable, please try again later"))
                 .build();
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> pingPongRoute() {
+        return route("pingPongRoute")
+                .GET("/ping", request -> ServerResponse.ok().body("pong"))
+                .build();
+    }
 }
