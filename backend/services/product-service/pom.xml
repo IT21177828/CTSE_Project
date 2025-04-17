@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ctse.microservices</groupId>
-	<artifactId>productService</artifactId>
+	<artifactId>product-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>productService</name>
+	<name>product-service</name>
 	<description>CTSE Product sevice</description>
 	<url/>
 	<licenses>
