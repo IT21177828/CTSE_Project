@@ -1,0 +1,85 @@
+name: 🚀 Deploy to AKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_all:
+        description: 'Build all services regardless of changes'
+        required: false
+        default: 'false'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🔐 Authenticate to ACR
+        run: |
+          echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ secrets.ACR_LOGIN_SERVER }} \
+            --username ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: 🔧 Detect Changed Services
+        id: detect_changes
+        run: |
+          echo "changed_services=" >> $GITHUB_OUTPUT
+          if [[ '${{ github.event.inputs.build_all }}' == 'true' ]]; then
+            echo "✅ build_all is set to true. Will build all services."
+            echo "changed_services=*" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          for dir in backend/services/*; do
+            service=$(basename "$dir")
+            if git diff --quiet HEAD^ HEAD -- "$dir"; then
+              echo "❌ No changes in $service"
+            else
+              echo "✅ Changes detected in $service"
+              echo "changed_services=$service" >> $GITHUB_OUTPUT
+              break
+            fi
+          done
+
+      - name: 🔨 Build Maven Projects (Changed or All)
+        if: steps.detect_changes.outputs.changed_services != ''
+        run: |
+          for dir in backend/services/*; do
+            service=$(basename "$dir")
+            if [[ "${{ github.event.inputs.build_all }}" == "true" ]] || \
+               git diff --quiet HEAD^ HEAD -- "$dir" == false; then
+              echo "🔧 Building Maven project: $service"
+              mvn -B clean package -DskipTests -f "$dir/pom.xml"
+            fi
+          done
+
+      - name: 🛠️ Build & Push Changed Docker Images
+        if: steps.detect_changes.outputs.changed_services != ''
+        run: |
+          for dir in backend/services/*; do
+            service=$(basename "$dir")
+            if [[ "${{ github.event.inputs.build_all }}" == "true" ]] || \
+               git diff --quiet HEAD^ HEAD -- "$dir" == false; then
+              echo "✨ Building and pushing $service"
+              docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/$service:latest "$dir"
+              docker push ${{ secrets.ACR_LOGIN_SERVER }}/$service:latest
+            fi
+          done
+
+      - name: ⚙️ Set up kubectl CLI
+        uses: azure/setup-kubectl@v3
+
+      - name: 🔧 Configure Kubeconfig for AKS
+        run: |
+          echo "$KUBECONFIG_DATA" > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl config get-contexts
+        env:
+          KUBECONFIG_DATA: ${{ secrets.KUBECONFIG_DATA }}
+
+      - name: 🚢 Deploy Kubernetes Manifests
+        run: |
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl apply -f backend/k8s/manifests/infrastucture
+          kubectl apply -f backend/k8s/manifests/applications/
