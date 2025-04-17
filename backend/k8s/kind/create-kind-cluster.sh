@@ -1,0 +1,1 @@
+kind create cluster --name microservice --config kind-config.yaml
