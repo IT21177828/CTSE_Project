@@ -1,4 +1,4 @@
-package com.techie.microservices.inventory;
+package com.ctse.microservice.inventoryService;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
