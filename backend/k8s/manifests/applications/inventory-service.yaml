@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: inventory-service
-          image: inventory-service:latest
-          imagePullPolicy: Never
+          image: ctseaksacr.azurecr.io/inventory-service:latest
+#          imagePullPolicy: Never
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
