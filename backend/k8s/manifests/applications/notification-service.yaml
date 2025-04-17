@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: notification-service:latest
-          imagePullPolicy: Never
+          image: ctseaksacr.azurecr.io/notification-service:latest
+#          imagePullPolicy: Never
           env:
             - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
               valueFrom:

@@ -3,4 +3,3 @@
 terraform.tfstate
 terraform.tfstate.backup
 .idea
-.DS_Store
