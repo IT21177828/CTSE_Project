@@ -7,6 +7,14 @@ on:
         description: 'Build all services regardless of changes'
         required: false
         default: 'false'
+      bypass_security_scan:
+        description: 'Bypass Snyk scan failures and continue build'
+        required: false
+        default: 'false'
+      test_all:
+        description: 'Test all projects with Snyk, regardless of changes'
+        required: false
+        default: 'false'
 
 jobs:
   deploy:
@@ -64,13 +72,41 @@ jobs:
             fi
           done
 
-      - name: 🧪 Snyk Scan (Maven - Order Service)
+      - name: 🧪 Snyk Scan (All or Changed Projects)
         run: |
           npm install -g snyk
-          snyk test --file=backend/services/order-service/pom.xml --project-name=order-service
+
+          echo "🔍 Starting Snyk scan..."
+          changed="${{ steps.detect_changes.outputs.changed_services }}"
+          test_all="${{ github.event.inputs.test_all }}"
+          bypass="${{ github.event.inputs.bypass_security_scan }}"
+
+          result_summary=""
+
+          for dir in backend/services/*; do
+            service=$(basename "$dir")
+
+            if [[ "$test_all" == "true" ]] || [[ "$changed" == "*" ]] || [[ "$changed" == *"$service"* ]]; then
+              echo "🧪 Running Snyk scan on $service..."
+              if snyk test --file="$dir/pom.xml" --project-name="$service"; then
+                echo "✅ Snyk scan passed for $service"
+                result_summary+="✅ $service: PASSED\n"
+              else
+                echo "❌ Snyk scan FAILED for $service"
+                result_summary+="❌ $service: FAILED\n"
+                if [[ "$bypass" != "true" ]]; then
+                  echo "❌ Exiting due to Snyk failure and bypass_security_scan=false"
+                  exit 1
+                fi
+              fi
+            else
+              echo "⏭️ Skipping Snyk scan for $service (not changed)"
+            fi
+          done
+
+          echo -e "🧾 Snyk Scan Summary:\n$result_summary"
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
 
       - name: 🛠️ Build & Push Changed Docker Images
         run: |
