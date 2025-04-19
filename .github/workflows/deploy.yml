@@ -88,7 +88,7 @@ jobs:
 
             if [[ "$test_all" == "true" ]] || [[ "$changed" == "*" ]] || [[ "$changed" == *"$service"* ]]; then
               echo "🧪 Running Snyk scan on $service..."
-              if snyk test --file="$dir/pom.xml" --project-name="$service"; then
+              if snyk test --file="$dir/pom.xml" --project-name="$service" --policy-path=.snyk; then
                 echo "✅ Snyk scan passed for $service"
                 result_summary+="✅ $service: PASSED\n"
               else
