@@ -63,6 +63,13 @@ jobs:
               mvn -B clean package -DskipTests -f "$dir/pom.xml"
             fi
           done
+          
+      - name: 🧪 Snyk Scan (Maven)
+        uses: snyk/actions/maven@master
+        with:
+          command: test
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: 🛠️ Build & Push Changed Docker Images
         run: |
