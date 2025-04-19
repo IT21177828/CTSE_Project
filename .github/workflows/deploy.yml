@@ -63,11 +63,12 @@ jobs:
               mvn -B clean package -DskipTests -f "$dir/pom.xml"
             fi
           done
-          
-      - name: 🧪 Snyk Scan (Maven)
+
+      - name: 🧪 Snyk Scan (Maven - Order Service)
         uses: snyk/actions/maven@master
         with:
           command: test
+          args: --file=backend/services/order-service/pom.xml --project-name=order-service
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
