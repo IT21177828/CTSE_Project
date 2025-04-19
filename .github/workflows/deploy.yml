@@ -80,8 +80,8 @@ jobs:
           changed="${{ steps.detect_changes.outputs.changed_services }}"
           test_all="${{ github.event.inputs.test_all }}"
           bypass="${{ github.event.inputs.bypass_security_scan }}"
-
           result_summary=""
+          failed=0
 
           for dir in backend/services/*; do
             service=$(basename "$dir")
@@ -94,17 +94,21 @@ jobs:
               else
                 echo "❌ Snyk scan FAILED for $service"
                 result_summary+="❌ $service: FAILED\n"
-                if [[ "$bypass" != "true" ]]; then
-                  echo "❌ Exiting due to Snyk failure and bypass_security_scan=false"
-                  exit 1
-                fi
+                failed=1
               fi
             else
               echo "⏭️ Skipping Snyk scan for $service (not changed)"
             fi
           done
 
-          echo -e "🧾 Snyk Scan Summary:\n$result_summary"
+          echo -e "\n🧾 Snyk Scan Summary:\n$result_summary"
+
+          if [[ "$failed" -eq 1 && "$bypass" != "true" ]]; then
+            echo "❌ One or more Snyk scans failed and bypass_security_scan is false. Failing pipeline."
+            exit 1
+          else
+            echo "✅ All scans completed. Continuing with pipeline (bypass=${bypass})"
+          fi
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
