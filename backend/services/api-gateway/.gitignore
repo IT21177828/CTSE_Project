@@ -47,3 +47,4 @@ mysql/
 # === Docker / Testcontainers ===
 **/testcontainers.properties
 **/testcontainers.log
+terraformed/

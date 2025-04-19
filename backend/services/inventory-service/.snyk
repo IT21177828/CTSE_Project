@@ -1,0 +1,4 @@
+ignore:
+  "SNYK-JAVA-COMMYSQL-9725315":
+    - reason: "No patch available, approved for temporary use in student environment"
+      expires: "2025-06-30T00:00:00Z"
