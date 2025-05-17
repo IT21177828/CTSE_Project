@@ -143,6 +143,17 @@
 
 	</dependencies>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>6.2.7</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
 	<repositories>
 		<repository>
 			<id>central</id>
