@@ -16,13 +16,7 @@ import java.util.Optional;
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    /**
-     * Checks if the requested quantity of a product is in stock.
-     *
-     * @param skuCode  The SKU code of the product.
-     * @param quantity The requested quantity.
-     * @return true if the requested quantity is available, false otherwise.
-     */
+
     public boolean isInStock(String skuCode, Integer quantity) {
         log.info("Checking stock for SKU: {}, requested quantity: {}\n", skuCode, quantity);
 
