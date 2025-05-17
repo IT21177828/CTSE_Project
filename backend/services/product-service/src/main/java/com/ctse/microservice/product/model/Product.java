@@ -1,4 +1,4 @@
-package com.ctse.microservices.product.model;
+package com.ctse.microservice.product.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
