@@ -1,4 +1,4 @@
-package com.ctse.microservices.product.config;
+package com.ctse.microservice.product.config;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
