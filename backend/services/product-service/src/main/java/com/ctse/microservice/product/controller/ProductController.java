@@ -1,8 +1,8 @@
-package com.ctse.microservices.product.controller;
+package com.ctse.microservice.product.controller;
 
-import com.ctse.microservices.product.dto.ProductRequest;
-import com.ctse.microservices.product.dto.ProductResponse;
-import com.ctse.microservices.product.service.ProductService;
+import com.ctse.microservice.product.dto.ProductRequest;
+import com.ctse.microservice.product.dto.ProductResponse;
+import com.ctse.microservice.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

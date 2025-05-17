@@ -1,9 +1,9 @@
-package com.ctse.microservices.product.service;
+package com.ctse.microservice.product.service;
 
-import com.ctse.microservices.product.dto.ProductRequest;
-import com.ctse.microservices.product.dto.ProductResponse;
-import com.ctse.microservices.product.model.Product;
-import com.ctse.microservices.product.repository.ProductRepository;
+import com.ctse.microservice.product.dto.ProductRequest;
+import com.ctse.microservice.product.dto.ProductResponse;
+import com.ctse.microservice.product.model.Product;
+import com.ctse.microservice.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.ctse.microservices.product.config;
+package com.ctse.microservice.product.config;
 
 
 import io.micrometer.observation.ObservationRegistry;
