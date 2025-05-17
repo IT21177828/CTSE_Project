@@ -50,6 +50,7 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
+			<version>9.3.0</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -124,6 +125,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>9.0.104</version>
 		</dependency>
 	</dependencies>
 
