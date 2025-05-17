@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: api-gateway:latest
-          imagePullPolicy: Never
+          image: ctseaksacr.azurecr.io/api-gateway:latest
+#          imagePullPolicy: Never
           ports:
             - containerPort: 9000
           env:
