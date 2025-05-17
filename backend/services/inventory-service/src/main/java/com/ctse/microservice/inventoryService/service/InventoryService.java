@@ -3,6 +3,7 @@ package com.ctse.microservice.inventoryService.service;
 import com.ctse.microservice.inventoryService.model.Inventory;
 import com.ctse.microservice.inventoryService.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
@@ -11,12 +12,41 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
+
     public boolean isInStock(String skuCode, Integer quantity) {
-        return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
+        log.info("Checking stock for SKU: {}, requested quantity: {}\n", skuCode, quantity);
+
+        if (quantity <= 0) {
+            log.warn("Invalid quantity: {}. Quantity must be greater than 0.\n", quantity);
+            return false;
+        }
+
+        Optional<Inventory> inventoryOptional = inventoryRepository.findBySkuCode(skuCode);
+
+        if (inventoryOptional.isPresent()) {
+            Inventory inventory = inventoryOptional.get();
+            int availableQty = inventory.getQuantity();
+            log.info("Current stock for {} is {}\n", skuCode, availableQty);
+
+            if (availableQty >= quantity) {
+                inventory.setQuantity(availableQty - quantity);
+                inventoryRepository.save(inventory);
+                log.info("Stock updated. New quantity for {}: {}\n", skuCode, inventory.getQuantity());
+                return true;
+            } else {
+                log.warn("Not enough stock. Requested: {}, Available: {}\n", quantity, availableQty);
+                return false;
+            }
+        } else {
+            log.warn("SKU '{}' not found in inventory.\n", skuCode);
+            return false;
+        }
     }
+
 
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findAll();
