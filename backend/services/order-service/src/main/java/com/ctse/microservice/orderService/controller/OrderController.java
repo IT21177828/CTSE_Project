@@ -15,6 +15,8 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    // This endpoint is used to place an order
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     private String placeOrder(@RequestBody OrderRequest orderRequest){
