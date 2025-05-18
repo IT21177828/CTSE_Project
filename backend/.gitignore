@@ -5,4 +5,6 @@ terraform.tfstate.backup
 .idea
 backend/volume-data/
 *.sock
-.volume-data/
+volume-data/
+docker/tempo/tempo-data
+.docker

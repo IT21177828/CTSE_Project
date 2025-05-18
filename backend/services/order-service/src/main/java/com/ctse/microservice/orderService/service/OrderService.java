@@ -4,6 +4,7 @@ import brave.Tracer;
 import com.ctse.microservice.orderService.client.InventoryClient;
 import com.ctse.microservice.orderService.dto.OrderRequest;
 import com.ctse.microservice.order.event.OrderPlacedEvent;
+import com.ctse.microservice.orderService.exception.ProductOutOfStockException;
 import com.ctse.microservice.orderService.model.Order;
 import com.ctse.microservice.orderService.repository.OrderRepository;
 import groovy.util.logging.Slf4j;
@@ -33,7 +34,7 @@ public class OrderService {
         var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
 
         if (!isProductInStock) {
-            throw new RuntimeException("Product with sku code " + orderRequest.skuCode() + " is not in stock");
+            throw new ProductOutOfStockException(orderRequest.skuCode());
         } else {
             Order order = new Order();
             order.setOrderNumber(UUID.randomUUID().toString());
